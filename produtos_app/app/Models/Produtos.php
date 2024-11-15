@@ -16,4 +16,7 @@ class Produtos extends Model
         'price',
         'stock'
     ];
+
+    public $timestamps = false; // Desativa os timestamps
+    
 }
