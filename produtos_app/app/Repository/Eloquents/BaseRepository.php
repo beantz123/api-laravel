@@ -14,7 +14,7 @@ class BaseRepository implements EloquentRepositoryInterface {
         //valores que não podem ser nulos
         if($request->name && $request->price && $request->stock) {
 
-            $auxRepo = new AuxiliaryRepository($request);
+            $auxRepo = new AuxiliaryRepository();
             //verificar se o produto ja existe no banco
             if($auxRepo->verifyProdutosCr($request) == false) {
 
@@ -57,16 +57,25 @@ class BaseRepository implements EloquentRepositoryInterface {
     }
 
     public function index() {
-        $produtos = Produtos::select()->get();
+        
+        $produtos = Produtos::all();
         //convertendo produtos em formato json
-        return response()->json($produtos);
+        
+        if($produtos->isEmpty()){
+            
+            return response(["nao tem produto"], 400);
+
+        } 
+
+        return response()->json($produtos, 200);
+        
     }
 
     public function update(Request $request, $productId) {
         $produto = Produtos::find($productId); // Retorna a instância do modelo ou null
     
         if($produto) {
-            $auxRepo = new AuxiliaryRepository($request);
+            $auxRepo = new AuxiliaryRepository();
             //verificar se o nome que quer enviar ja existe
             if($auxRepo->verifyProdutosUp($request) == false) {
 
