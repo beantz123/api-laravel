@@ -21,11 +21,13 @@ class AuxiliaryRepository {
 
     }
 
-    public function verifyProdutosUp(Request $request) {
-        return Produtos::where('name', $request->name)
-                       ->where('id', '!=', $request->id)
-                       ->exists();
+    public function verifyProdutosUp(Request $request, $productId) {
 
+        $produto = Produtos::where('name', $request->name)
+                        ->where('id', '!=', $productId)
+                        ->exists();
+                        
+        return $produto;
     }
     
 }

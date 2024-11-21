@@ -75,9 +75,10 @@ class BaseRepository implements EloquentRepositoryInterface {
         $produto = Produtos::find($productId); // Retorna a instância do modelo ou null
     
         if($produto) {
+            
             $auxRepo = new AuxiliaryRepository();
             //verificar se o nome que quer enviar ja existe
-            if($auxRepo->verifyProdutosUp($request) == false) {
+            if($auxRepo->verifyProdutosUp($request, $productId) == false) {
 
                 if($request->price > 0) {
 
@@ -110,7 +111,7 @@ class BaseRepository implements EloquentRepositoryInterface {
             } else {
 
                 return response(["Já existe um dado com esse nome!"], 400);
-            }
+            } 
             
         } else {
             return response(["Produto não encontrado"], 404); // Produto não encontrado
