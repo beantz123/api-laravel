@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->float('peso', 8, 2);
             $table->float('tamanho', 8, 2);
+            $table->unsignedBigInteger('products_id');
+
+            $table->foreign('products_id')->references('id')->on('produtos');
+            $table->unique('products_id');
 
             $table->timestamps();
         });
@@ -25,6 +29,12 @@ return new class extends Migration
      */
     public function down(): void
     {
+
+        Schema::table('detalhes', function(Blueprint $table){
+           
+            $table->dropForeign(['products_id']);
+
+        });
 
         Schema::dropIfExists('detalhes');
     }
