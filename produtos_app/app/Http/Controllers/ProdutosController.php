@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Repository\Eloquents\BaseRepository;
-use Illuminate\Support\Facades\DB;
-use App\Models\Produtos;
 use Illuminate\Http\Request;
 
 class ProdutosController extends Controller
@@ -18,8 +16,6 @@ class ProdutosController extends Controller
     //metodo para listar todos os produtos
     public function index() {
 
-        //verificar os metodos
-        
         return $this->BaseRepository->index();
 
     }
@@ -38,7 +34,6 @@ class ProdutosController extends Controller
         
     }
     
-
     //metodo para exibir apenas um produto
     public function viewProduct($productId) {
 
@@ -52,4 +47,29 @@ class ProdutosController extends Controller
         return $this->BaseRepository->delete($productId);
 
     }
+
+    public function findNameProduct($brand) {
+
+        return $this->BaseRepository->findNameProduct($brand);
+
+    }
+
+    public function expiredProducts($date) {
+
+        return $this->BaseRepository->expiredProducts($date);
+
+    }
+
+    public function expiredProductsPeriod(Request $request){
+        
+        return $this->BaseRepository->expiredProductsPeriod($request);
+
+    }
+
+    public function getProductsPrice(){
+        
+        return $this->BaseRepository->getProductsPrice();
+
+    }
+
 }

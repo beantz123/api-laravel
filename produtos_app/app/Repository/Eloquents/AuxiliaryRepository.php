@@ -9,13 +9,15 @@ class AuxiliaryRepository {
 
     public function verifyProdutosCr(Request $request){
 
-        if(Produtos::select()->where('name', $request->name)){
+        $produto = Produtos::where('name', $request->name)->get();
 
-            return false;
+        if($produto->isNotEmpty()){
+
+            return true;
 
         } else {
 
-            return true;
+            return false;
 
         }
 

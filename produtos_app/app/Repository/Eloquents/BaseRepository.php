@@ -8,6 +8,8 @@ use App\Models\Produtos;
 use Illuminate\Http\Request;
 use App\Repository\Eloquents\AuxiliaryRepository;
 
+use function PHPUnit\Framework\isEmpty;
+
 class BaseRepository implements EloquentRepositoryInterface {
 
     public function store(Request $request) {
@@ -29,7 +31,9 @@ class BaseRepository implements EloquentRepositoryInterface {
                         "name" => $request->name,
                         "description" => $request->description,
                         "price" => $request->price,
-                        "stock" => $request->stock
+                        "stock" => $request->stock,
+                        "data_de_fabricação" => $request->data_de_fabricação,
+                        "data_de_vencimento" => $request->data_de_vencimento
 
                         ]);
 
@@ -89,6 +93,8 @@ class BaseRepository implements EloquentRepositoryInterface {
                         $produto->description = $request->description;
                         $produto->price = $request->price;
                         $produto->stock = $request->stock;
+                        $produto->data_de_fabricação = $request->data_de_fabricação;
+                        $produto->data_de_vencimento = $request->data_de_vencimento;
 
                         $produto->save(); // Salva as alterações no banco de dados
 
@@ -143,6 +149,70 @@ class BaseRepository implements EloquentRepositoryInterface {
         } else {
             return response(["produto não encontrado!"], 404);
         } 
+    }
+
+    //retornar produtos pela nome fornecido
+    public function findNameProduct($nameProduct){
+
+        $productsBrand = Produtos::where('name', 'like', "$nameProduct%")->get();
+        
+        if($productsBrand->isNotEmpty()){
+
+            return $productsBrand;
+
+        } else {
+
+            return response(["produto não encontrada"]);
+
+        }
+    }
+
+    //retornar produtos q estarao vencidos a partir de uma data informada
+    public function expiredProducts($date){
+
+        $produto = Produtos::where('data_de_vencimento', '<', $date)->get();
+
+        if($produto->isNotEmpty()){
+            return $produto;
+        } else {
+            return response(["não possui produtos vencidos para antes da data fornecida"]);
+        }
+
+    }
+
+    //retornar quais produtos durante um determinado periodo estarão vencidos
+    public function expiredProductsPeriod(Request $request){
+        
+        $dateInit = $request->input('date-init');
+        $dateFinal = $request->input('date-final');
+
+        if($dateInit != "" && $dateFinal != ""){
+
+            $dates = Produtos::whereBetween('data_de_vencimento', [$dateInit, $dateFinal])->get();
+
+            if(!$dates->isEmpty()){
+
+                return $dates;
+
+            } else {
+                return response(["Dados fornécidos inválidos!"]);
+            }
+
+        } else {
+
+            return response(["você precisa inserir uma data inicial e uma data final para conseguir retornar os dados corretamente!"]);
+        
+        }
+        
+    }
+
+    //retornar apenas o nome e preço dos produtos
+    public function getProductsPrice(){
+
+        $produtos = Produtos::pluck('price', 'name');
+
+        return $produtos; 
+
     }
 
 }

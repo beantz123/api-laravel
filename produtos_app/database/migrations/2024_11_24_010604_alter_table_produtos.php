@@ -13,8 +13,8 @@ return new class extends Migration
     {
         //
         Schema::table('produtos', function(Blueprint $table){
-            $table->dateTime('data_de_fabricação')->notNull();
-            $table->dateTime('data_de_vencimento')->notNull();
+            $table->dateTime('data_de_fabricação');
+            $table->dateTime('data_de_vencimento');
         });
     }
 

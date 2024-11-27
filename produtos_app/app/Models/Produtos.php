@@ -14,8 +14,13 @@ class Produtos extends Model
         'name',
         'description',
         'price',
-        'stock'
+        'stock',
+        'data_de_fabricação',
+        'data_de_vencimento'
     ];
+
+    //ignorar colunas nas retornos
+    protected $hidden = ['created_at', 'updated_at'];
 
     public $timestamps = false; // Desativa os timestamps
     
